@@ -12,6 +12,7 @@ model users {
   createdAt DateTime @default(now())
   email     String   @unique(map: "User_email_key")
   password  String
+  role      String   @default("admin")
 }
 
 model products {

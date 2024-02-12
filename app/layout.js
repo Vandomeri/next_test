@@ -3,6 +3,7 @@ import './globals.css'
 import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import Logout from '@/components/Logout'
+import { NextAuthConfig } from '@/configs/NextAuthConfig'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -14,8 +15,8 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }) {
-  const session = await getServerSession()
-  console.log({ session });
+  const session = await getServerSession(NextAuthConfig)
+
   return (
     <html lang="ru">
       <body className={inter.className}>
