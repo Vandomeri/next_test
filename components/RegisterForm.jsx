@@ -1,20 +1,42 @@
-'use client'
+import { PrismaClient } from "@prisma/client"
+import { hash } from "bcrypt"
+import { redirect } from 'next/navigation'
+
+
+async function registerUser(formData) {
+    'use server'
+    let result
+    try {
+        const { email, password } = Object.fromEntries(formData)
+        const hashedPass = await hash(password, 10)
+        const prisma = new PrismaClient()
+        const response = await prisma.users.create({
+            data: {
+                email: email,
+                password: hashedPass
+            }
+        })
+        console.log(response);
+
+        return {
+            message: 'tttt'
+        }
+    }
+    catch (e) {
+        console.log({ e });
+    }
+
+
+    if (result)
+        return redirect('/')
+
+}
+
 
 export default function RegisterForm() {
-    async function submitHandler(e) {
-        e.preventDefault()
-        const formData = new FormData(e.target)
-        const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            body: JSON.stringify({
-                email: formData.get('email'),
-                password: formData.get('password')
-            })
-        })
-        console.log({ response });
-    }
+
     return (
-        <form onSubmit={submitHandler}>
+        <form action={registerUser}>
             <input type="email" name="email" placeholder="Email" required />
             <input type="password" name="password" placeholder="Password" required />
             <button type="submit">Register</button>
